@@ -1,5 +1,4 @@
-#include "util.h"
-
+#include "util.h"	
 
 int my_toLower(int x)
 {
@@ -35,4 +34,14 @@ size_t my_strlen(const char* str)
 	}
 
 	return len;
+}
+
+unsigned char NO_INLINE HChar(unsigned char C )
+{
+    return C;
+}
+
+wchar_t NO_INLINE HWChar(wchar_t C )
+{
+    return C;
 }

